@@ -1,6 +1,5 @@
 --script to list all bands
-SELECT band_name,
-       IFNULL(SPLIT_STR(lifespan, '-', 1), 2022) - IFNULL(SPLIT_STR(lifespan, '-', -1), 2022) AS lifespan
+SELECT band_name AS band_name, IFNULL(split, 2020) - IFNULL(formed, 0) AS lifespan
 FROM metal_bands
-WHERE style = 'Glam rock'
+WHERE style LIKE '%Glam rock%'
 ORDER BY lifespan DESC;

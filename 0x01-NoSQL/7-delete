@@ -1,0 +1,2 @@
+// script to delete all docs
+db.school.deleteMany({ name: "Holberton school" });

@@ -1,0 +1,2 @@
+// script to list all docs with a specific att
+db.school.find({ name: "Holberton school" });

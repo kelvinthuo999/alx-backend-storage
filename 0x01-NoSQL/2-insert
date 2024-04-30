@@ -1,0 +1,2 @@
+// script to insert a doc
+db.insertOne.({ name: “Holberton school” });

@@ -1,2 +1,2 @@
 // script to insert a doc
-db.school.insertOne.({ name: “Holberton school” });
+db.school.insertiOne.({ name: “Holberton school” })

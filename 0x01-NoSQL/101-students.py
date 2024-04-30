@@ -6,12 +6,12 @@ import pymongo
 
 def top_students(mongo_collection):
     '''function to sort scores'''
-    result = [
+    result = mongo_collection.aggregate([
         {"$group": {
             "name": "$name",
             "averageScore": {"$avg": "$topics.score"}
         }},
         {"$sort": {"averageScore": -1}}
-    ]
+    ])
 
-    return list(mongo_collection.aggregate(result))
+    return result 

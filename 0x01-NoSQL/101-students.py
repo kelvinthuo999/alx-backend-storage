@@ -7,9 +7,8 @@ import pymongo
 def top_students(mongo_collection):
     '''function to sort scores'''
     result = [
-        {"$unwind": "$topics"},
         {"$group": {
-            "_id": "$name",
+            "name": "$name",
             "averageScore": {"$avg": "$topics.score"}
         }},
         {"$sort": {"averageScore": -1}}

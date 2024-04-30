@@ -5,9 +5,10 @@ import pymongo
 
 
 def top_students(mongo_collection):
+    # sourcery skip: inline-immediately-returned-variable
     '''function to sort scores'''
     result = mongo_collection.aggregate([
-        {"$group": {
+        {"$project": {
             "name": "$name",
             "averageScore": {"$avg": "$topics.score"}
         }},

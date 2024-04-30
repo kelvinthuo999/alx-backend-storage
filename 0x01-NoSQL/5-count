@@ -1,0 +1,2 @@
+// script to display num of docs
+db.school.count()

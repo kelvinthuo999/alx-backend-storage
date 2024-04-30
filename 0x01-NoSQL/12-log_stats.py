@@ -1,34 +1,32 @@
 #!/usr/bin/env python3
-'''function to look at nginx logs'''
+'''function to look at logs in db'''
 
 from pymongo import MongoClient
 
-def log_stats(mongo_collection):
-    """
-    Display stats about Nginx logs stored in MongoDB.
-
-    Args:
-    - mongo_collection: pymongo collection object
-    """
-    # Get total number of logs
-    total_logs = mongo_collection.count_documents({})
-
-    # Get number of logs for each method
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    method_counts = {method: mongo_collection.count_documents({"method": method}) for method in methods}
-
-    # Get number of logs with method=GET and path=/status
-    status_check_count = mongo_collection.count_documents({"method": "GET", "path": "/status"})
-
-    # Display stats
-    print(f"{total_logs} logs")
-    print("Methods:")
-    for method, count in method_counts.items():
-        print(f"    method {method}: {count}")
-    print(f"{status_check_count} status check")
 
 if __name__ == "__main__":
+    '''function to display all the logs in db'''
     client = MongoClient('mongodb://127.0.0.1:27017')
-    logs_collection = client.logs.nginx
+    nginx_collection = client.logs.nginx
 
-    log_stats(logs_collection)
+    # Count total logs
+    n_logs = nginx_collection.count_documents({})
+    print(f'{n_logs} logs')
+
+    # Aggregate counts for each method
+    pipeline = [
+        {"$group": {"_id": "$method", "count": {"$sum": 1}}},
+        {"$sort": {"_id": 1}}
+    ]
+    method_counts = list(nginx_collection.aggregate(pipeline))
+
+    # Print method counts
+    print('Methods:')
+    for method_count in method_counts:
+        method = method_count["_id"]
+        count = method_count["count"]
+        print(f'\tmethod {method}: {count}')
+
+    # Count logs with method=GET and path=/status
+    status_check = nginx_collection.count_documents({"method": "GET", "path": "/status"})
+    print(f'{status_check} status check')
